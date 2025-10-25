@@ -19,8 +19,24 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.version>3.2.5</surefire.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <org.projectlombok.version>1.18.42</org.projectlombok.version>
         <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
