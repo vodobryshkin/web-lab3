@@ -31,13 +31,13 @@ jobs:
           echo "version=$V" >> "$GITHUB_OUTPUT"
           echo "Resolved Maven version: $V"
 
+      - name: Build, test, doc generation and coverage with Maven
+        run: mvn -B -U clean verify
+
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: target/site/apidocs
-
-      - name: Build, test, doc generation and coverage with Maven
-        run: mvn -B -U clean verify
 
   javadoc_pages_deploy:
     if: ${{ github.event_name == 'push' }}
