@@ -1,0 +1,46 @@
+name: workflow.yml
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+permissions:
+  contents: read
+  packages: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version_from_maven.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from Maven
+        id: version_from_maven
+        run: |
+          V=$(mvn -q -ntp -DforceStdout help:evaluate -Dexpression=project.version | tr -d '\r')
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "Resolved Maven version: $V"
+
+      - name: Build, test, doc generation and coverage with Maven
+        run: mvn -B -U clean verify
+
+  javadoc_pages_deploy:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
